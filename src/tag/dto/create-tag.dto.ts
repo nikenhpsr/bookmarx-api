@@ -10,9 +10,4 @@ export class CreateTagDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  bookmarkId: number;
 }

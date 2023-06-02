@@ -9,6 +9,7 @@ import {
 } from './dto';
 import { Prisma } from '@prisma/client';
 
+
 @Injectable()
 export class BookmarkService {
   constructor(private prisma: PrismaService) {}
@@ -16,7 +17,7 @@ export class BookmarkService {
   getBookmarks(userId: number) {
     return this.prisma.bookmark.findMany({
       where: {
-        userId,
+        userId: userId,
       },
     });
   }
@@ -38,66 +39,93 @@ export class BookmarkService {
     dto: CreateBookmarkDto,
   ) {
     const bookmark =
-      await this.prisma.bookmark.create({
-          data: {
-            userId,
+    await this.prisma.bookmark.create({
+      data: {
+            user: userId,
             ...dto,
           } as unknown as Prisma.BookmarkCreateInput,
-      });
-
-    return bookmark;
-  }
-
-  async editBookmarkById(
-    userId: number,
-    bookmarkId: number,
-    dto: EditBookmarkDto,
-  ) {
-    // get the bookmark by id
-    const bookmark =
-      await this.prisma.bookmark.findUnique({
-        where: {
-          id: bookmarkId,
-        },
-      });
-
-    // check if user owns the bookmark
-    if (!bookmark || bookmark.userId !== userId)
-      throw new ForbiddenException(
-        'Access to resources denied',
-      );
-
-    return this.prisma.bookmark.update({
-      where: {
-        id: bookmarkId,
-      },
-      data: {
-        ...dto,
-      },
-    });
-  }
-
+        });
+        
+        return bookmark;
+      }
+    
+      /*async createBookmark(dto: CreateBookmarkDto) {
+        const bookmark = await this.prisma.bookmark.create({
+          data: {
+            title: dto.title,
+            description: dto.description,
+            link: dto.link,
+            user: dto.userId,
+            // tagId: ... // Assign the tagId here
+          },
+        });
+      
+        // Associate the tag with the bookmark
+        const tag = await this.prisma.tag.findUnique({
+          where: { id: dto.tagId },
+        });
+      
+        if (tag) {
+          await this.prisma.bookmark.update({
+            where: { id: bookmark.id },
+            data: { Tag: { connect: { id: tag.id } } },
+          });
+        }
+      
+        return bookmark;
+      }*/
+      
+      async editBookmarkById(
+        userId: number,
+        bookmarkId: number,
+        dto: EditBookmarkDto,
+        ) {
+          // get the bookmark by id
+          const bookmark =
+          await this.prisma.bookmark.findUnique({
+            where: {
+              id: bookmarkId,
+            },
+          });
+          
+          // check if user owns the bookmark
+          if (!bookmark || bookmark.userId !== userId)
+          throw new ForbiddenException(
+            'Access to resources denied',
+            );
+            
+            return this.prisma.bookmark.update({
+              where: {
+                id: bookmarkId,
+              },
+              data: {
+                ...dto,
+              },
+            });
+          }
+          
   async deleteBookmarkById(
     userId: number,
     bookmarkId: number,
-  ) {
+    ) {
     const bookmark =
       await this.prisma.bookmark.findUnique({
         where: {
           id: bookmarkId,
         },
       });
-
-    // check if user owns the bookmark
-    if (!bookmark || bookmark.userId !== userId)
+      
+      // check if user owns the bookmark
+      if (!bookmark || bookmark.userId !== userId)
       throw new ForbiddenException(
         'Access to resources denied',
-      );
-
-    await this.prisma.bookmark.delete({
-      where: {
-        id: bookmarkId,
-      },
-    });
-  }
-}
+        );
+        
+        await this.prisma.bookmark.delete({
+          where: {
+            id: bookmarkId,
+          },
+        });
+      }
+    }
+    

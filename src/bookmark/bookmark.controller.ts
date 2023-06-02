@@ -18,9 +18,8 @@ import {
   CreateBookmarkDto,
   EditBookmarkDto,
 } from './dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiTags, ApiProperty } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiTags, ApiProperty, ApiBearerAuth, ApiUnauthorizedResponse, ApiBody } from '@nestjs/swagger';
 
-@UseGuards(JwtGuard)
 @Controller('bookmarks')
 @ApiTags('bookmarks')
 export class BookmarkController {
@@ -29,7 +28,10 @@ export class BookmarkController {
   ) { }
 
   @Get()
+  @UseGuards(JwtGuard)
   @ApiProperty()
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
   @ApiOkResponse({ status: 200, description: 'All bookmarks successfully showed' })
   getBookmarks(@GetUser('id') userId: number) {
     return this.bookmarkService.getBookmarks(
@@ -38,8 +40,11 @@ export class BookmarkController {
   }
 
   @Get(':id')
+  @UseGuards(JwtGuard)
   @ApiProperty()
-  @ApiOkResponse({status:200, description: 'Unique bookmarks successfully showed'})
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
+  @ApiOkResponse({ status: 200, description: 'Unique bookmarks successfully showed' })
   getBookmarkById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,
@@ -51,21 +56,28 @@ export class BookmarkController {
   }
 
   @Post()
+  @UseGuards(JwtGuard)
   @ApiProperty()
-  @ApiCreatedResponse({status: 201, description: 'Bookmark successfully created'})
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
+  @ApiCreatedResponse({ status: 201, description: 'Bookmark successfully created' })
+  //@ApiBody({type: CreateBookmarkDto})
   createBookmark(
     @GetUser('id') userId: number,
     @Body() dto: CreateBookmarkDto,
   ) {
     return this.bookmarkService.createBookmark(
       userId,
-      dto,
+      dto
     );
   }
 
   @Patch(':id')
+  @UseGuards(JwtGuard)
   @ApiProperty()
-  @ApiResponse({status: 201, description: "Bookmark updated"})
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
+  @ApiResponse({ status: 201, description: "Bookmark updated" })
   editBookmarkById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,
@@ -80,8 +92,11 @@ export class BookmarkController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @UseGuards(JwtGuard)
   @ApiProperty()
-  @ApiOkResponse({status: 204, description: 'Bookmark deleted'})
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
+  @ApiOkResponse({ status: 204, description: 'Bookmark deleted' })
   deleteBookmarkById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,

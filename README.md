@@ -1,15 +1,6 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-<p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-</p>
-
 # Our Backend - BookmarX
 
-Simple API example made with [NestJS](https://github.com/nestjs/nest) framework using its TypeScript starter repository.
+BookmarX is a simple API example inspired by [Raindrop.io](https://raindrop.io) to manage the bookmarks we've created made with [NestJS](https://github.com/nestjs/nest) framework using its TypeScript starter repository.
 
 ## Team
 
@@ -18,6 +9,14 @@ Simple API example made with [NestJS](https://github.com/nestjs/nest) framework 
 | Niken Hapsari  | Team Lead and Backend Developer |
 | Anggih Pratama |        Backend Developer        |
 |  Nurdin Beta   |        Backend Developer        |
+
+## Diagram Database
+
+![Diagram Database](assets/diagram-db.png)
+
+## System Design
+
+![gcp-diagram](/assets/gcp-diagram.svg)
 
 ## Prepare Database
 
@@ -34,16 +33,24 @@ Docker Images: https://hub.docker.com/r/nikenhpsr/bookmarx
 Edit `.env` file:
 
 ```sh
-DATABASE_URL="postgres://groupd:password@localhost:5432/bookmark"
-JWT_SECRET="abdefghijklmnopqrstuvwxyzabcdefghi"
+DATABASE_URL="postgres://groupd:password@database:5432/bookmarx"
+JWT_SECRET="super-secret"
 ```
 
-## External IP
+## Links
 
 ```
 note: for dev purpose
 104.197.135.70
 ```
+
+Custom Domain: https://bookmarx.nikenhpsr.site/docs
+
+Railway: https://bookmarx-api-production.up.railway.app/docs
+
+Render: https://bookmarx.onrender.com/docs
+
+Status Monitor:
 
 ## Installation
 

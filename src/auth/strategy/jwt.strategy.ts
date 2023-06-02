@@ -34,6 +34,7 @@ export class JwtStrategy extends PassportStrategy(
         },
       });
     delete user.password;
+    console.log('User validated:', user);
     return user;
   }
 }

@@ -5,15 +5,18 @@ import {
   HttpStatus,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { AuthEntity } from './entities/auth.entity';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from './guard';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   @ApiCreatedResponse({status: 201, description: 'Your Account has been created'})
@@ -23,8 +26,8 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  @ApiCreatedResponse({status: 200, description: 'You have been logged in'})
-  signin(@Body() dto: AuthDto) {
+  @ApiOkResponse({type: AuthEntity})
+  signin(@Body() dto:AuthDto) {
     return this.authService.signin(dto);
   }
 }

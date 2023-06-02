@@ -36,7 +36,6 @@ export class TagService {
     const tags =
       await this.prisma.tag.create({
         data: {
-          bookmarkId,
           ...dto,
         },
       });
@@ -63,4 +62,21 @@ export class TagService {
         ...dto,
       },
     });
-    }}
+    }
+
+    async deleteTagById(
+      userId: number,
+      tagId: number,
+    ) {
+      const tag =
+        await this.prisma.tag.findUnique({
+          where: {
+            id: tagId,
+          },
+        });
+        await this.prisma.tag.delete({
+          where: {
+            id: tagId,
+          },
+        });
+  }}

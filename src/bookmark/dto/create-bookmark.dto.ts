@@ -5,6 +5,8 @@ import {
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { CreateTagDto } from 'src/tag/dto';
+import { Schema } from 'prisma';
 
 export class CreateBookmarkDto {
   @ApiProperty()

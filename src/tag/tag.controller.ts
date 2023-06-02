@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     ParseIntPipe,
@@ -8,14 +9,14 @@ import {
     Post,
     UseGuards,
   } from '@nestjs/common';
-  import { GetBookmark } from '../auth/decorator';
+  import { GetBookmark, GetUser } from '../auth/decorator';
   import { JwtGuard } from '../auth/guard';
   import { TagService } from './tag.service';
   import {
-    CreateTagDto,
+    CreateTagDto, EditTagDto,
     // EditTagDto,
   } from './dto';
-  import { ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiTags, ApiProperty } from '@nestjs/swagger';
+  import { ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiTags, ApiProperty, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
   @UseGuards(JwtGuard)
   @Controller('tags')
@@ -27,6 +28,8 @@ import {
 
   @Get()
   @ApiProperty()
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
   @ApiOkResponse({ status: 200, description: 'All tags successfully showed' })
   getTags(@GetBookmark('id') bookmarkId: number) {
     return this.tagService.getTags(
@@ -36,6 +39,8 @@ import {
 
   @Get(':id')
   @ApiProperty()
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
   @ApiOkResponse({status:200, description: 'Unique tags successfully showed'})
   getBTagById(
     @GetBookmark('id') bookmarkId: number,
@@ -49,6 +54,8 @@ import {
 
   @Post()
   @ApiProperty()
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
   @ApiCreatedResponse({status: 201, description: 'Tag successfully created'})
   createTag(
     @GetBookmark('id') bookmarkId : number,
@@ -58,5 +65,36 @@ import {
       bookmarkId,
       dto,
   );
+  }
+
+  @Patch(':id')
+  @ApiProperty()
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
+  @ApiOkResponse({status: 201, description:'Tag updated'})
+  editTagById(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) tagId: number,
+    @Body() dto: EditTagDto,
+  ) {
+    return this.tagService.editTagById(
+      tagId,
+      dto,
+    )
+  }
+
+  @Delete(':id')
+  @ApiProperty()
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse()
+  @ApiOkResponse({status: 204, description: 'tag deleted'})
+  deleteTagById(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) tagId: number,
+  ) {
+    return this.tagService.deleteTagById(
+      userId,
+      tagId,
+    );
   }
 }

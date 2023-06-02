@@ -40,9 +40,9 @@ model Bookmark {
   user   User @relation(fields: [userId], references: [id])
 
   tagId Int
-  Tag   Tag @relation(fields: [tagId], references: [id])
+  Tag   Tag? @relation(fields: [tagId], references: [id])
 
-  @@map("bookmarks")
+  @@unique([tagId, userId])
 }
 
 model Tag {
